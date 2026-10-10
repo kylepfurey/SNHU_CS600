@@ -8,18 +8,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Disabled;
 
-/** Test Objects */
+/** Testing Objects */
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import org.springframework.beans.factory.annotation.Value;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /** API */
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import java.nio.charset.StandardCharsets;
 
 /** Tests */
@@ -43,10 +43,10 @@ class SecurityConfigurationTests {
     static final String BOOKS_ENDPOINT = "/api/v1/books";
     static final String VERSION_ENDPOINT = "/api/v1/version";
     @Autowired MockMvc mvc;
-    ObjectMapper objectMapper = new ObjectMapper();
-    @Autowired UserDetailsService userDetailsService;
     @Value("${app.security.username}") String username;
     @Value("${app.security.password}") String password;
+    ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired UserDetailsService userDetailsService;
 
     /**
      * API
@@ -112,7 +112,11 @@ class SecurityConfigurationTests {
     }
 
     /**
-     * Authentication Tests
+     * New Test Plan
+     */
+
+    /**
+     * Security Tests
      */
     @Test
     void denyNoCredentials() throws Exception {
