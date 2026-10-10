@@ -84,7 +84,7 @@ public class APIController implements TestData {
         String out = new String();
 
         // Setup for JSON
-        out = out + "{ [ ";
+        out = out + "[ ";
         for (String i: book_list)
         {
             out = out + "\"" + i + "\"";
@@ -93,7 +93,7 @@ public class APIController implements TestData {
                 out = out + ",";
             }
         }
-        out = out + " ] }";
+        out = out + " ]";
         return out;
     } 
 }
