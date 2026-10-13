@@ -1,0 +1,41 @@
+// dbdiagram.io
+// Module 4.1 Schema
+// by Kyle Furey
+
+table customers {                                         // 
+  id              int       [pk, increment]               // 1.
+  name            varchar   [not null]                    // 2.
+}                                                         // 
+                                                          // 
+table addresses {                                         // 3.
+  id              int       [pk, increment]               // 
+  customer        int       [not null]                    // 
+  street          varchar   [not null]                    // 
+  city            varchar   [not null]                    // 
+  state           varchar   (2)                           // 
+  postal_code     varchar   [not null]                    // 
+  country         varchar   (2) [not null]                // 
+}                                                         // 
+                                                          // 
+table contacts {                                          // 5.
+  id              int       [pk, increment]               // 
+  customer        int       [not null]                    // 
+  name            varchar   [not null]                    // 
+  phone           varchar                                 // 
+  email           varchar                                 // 
+}                                                         // 
+                                                          // 
+table products {                                          // 
+  id              int       [pk, increment]               // 9.
+  name            varchar   [not null]                    // 10.
+  description     text                                    // 11.
+  in_stock        int       [not null, default: 0]        // 12.
+  on_order        int       [not null, default: 0]        // 13.
+  eta             date                                    // 14.
+  weight          decimal   [not null]                    // 15.
+  internal_cost   decimal   [not null]                    // 16.
+  retail_cost     decimal   [not null]                    // 17.
+}                                                         // 
+                                                          // 
+ref: addresses.customer > customers.id [delete: cascade]  // 4.
+ref: contacts.customer > customers.id  [delete: cascade]  // 6.
