@@ -1,5 +1,5 @@
 // .java
-// Book Service Backend
+// Books Service Backend
 // by Kyle Furey
 
 package com.snhu.mscs.cs600.module5;
@@ -10,10 +10,10 @@ import java.util.Arrays;
 import java.util.ArrayList;
 
 /**
- * Backend: Book Service
+ * Backend: Books Service
  */
 @Service
-public class BookService {
+public class BooksService {
     /**
      * Thread-Safe Array List
      */
