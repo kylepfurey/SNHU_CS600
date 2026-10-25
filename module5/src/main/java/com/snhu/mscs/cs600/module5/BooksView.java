@@ -7,6 +7,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridSortOrder;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.textfield.TextField;
@@ -27,17 +28,18 @@ public class BooksView extends VerticalLayout implements TestData { // 7. TestDa
         Grid<Book> grid = new Grid<Book>(Book.class, false);
 
         // 9. Grid Columns
-        grid.addColumn(Book::getTitle)
+        Grid.Column<Book> titles = grid.addColumn(Book::getTitle)
                 .setHeader("Title")
                 .setSortable(true)
                 .setFlexGrow(3);
-        grid.addColumn(Book::getAuthor)
+        Grid.Column<Book> authors = grid.addColumn(Book::getAuthor)
                 .setHeader("Author")
                 .setSortable(true)
                 .setFlexGrow(2);
-        grid.addColumn(Book::getYear)
+        Grid.Column<Book> years = grid.addColumn(Book::getYear)
                 .setSortable(true)
                 .setHeader("Year");
+        grid.sort(GridSortOrder.asc(titles).build());
 
         // 11. Read-Only Grid
         grid.setSelectionMode(Grid.SelectionMode.NONE);
