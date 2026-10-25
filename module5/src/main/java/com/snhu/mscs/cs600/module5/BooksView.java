@@ -7,6 +7,10 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.dataview.GridListDataView;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.component.html.H2;
 
 /**
@@ -39,10 +43,27 @@ public class BooksView extends VerticalLayout implements TestData { // 7. TestDa
         grid.setSelectionMode(Grid.SelectionMode.NONE);
 
         // 8. TestData in Grid
-        grid.setItems(book_list);
+        GridListDataView<Book> dataView = grid.setItems(book_list);
+
+        // Search Bar
+        TextField searchBar = new TextField();
+        searchBar.setPlaceholder("Search title, author, or year");
+        searchBar.setPrefixComponent(VaadinIcon.SEARCH.create());
+        searchBar.setClearButtonVisible(true);
+        searchBar.setWidth("30em");
+        searchBar.setValueChangeMode(ValueChangeMode.LAZY);
+        searchBar.addValueChangeListener(e -> {
+            String query = e.getValue().trim().toLowerCase();
+            dataView.setFilter(book ->
+                    query.isEmpty()
+                            || book.getTitle().toLowerCase().contains(query)
+                            || book.getAuthor().toLowerCase().contains(query)
+                            || String.valueOf(book.getYear()).contains(query)
+            );
+        });
 
         grid.setSizeFull();
         setSizeFull();
-        add(new H2("Books List"), grid);
+        add(new H2("Books List"), searchBar, grid);
     }
 }
