@@ -1,3 +1,7 @@
+// .java
+// Name View Frontend
+// by Kyle Furey
+
 package com.snhu.mscs.cs600.namesfeature.ui;
 
 /**
@@ -31,40 +35,41 @@ import jakarta.annotation.security.PermitAll;
 import java.util.List;
 
 /**
- * NameView - 
- * 
+ * NameView -
+ *
  * Purpose:
  *      The purpose of this class is to provide the UI view for data
- *      that has been retrieved from a database. This view creates a 
+ *      that has been retrieved from a database. This view creates a
  *      table based on data from that database and displays it to the
  *      user in an easily understood fashion.
- * 
- * Extends: 
+ *
+ * Extends:
  *      VeritcalLayout - A basic layout structure where items are added to
  *      the canvas in a vertical orientation.
  *
  * Class Level Annotations:
- *      @Route - This tells the Vaadin framework what the URL path is 
- *      relative to our base URL. "" is the default route for the 
+ *      @Route - This tells the Vaadin framework what the URL path is
+ *      relative to our base URL. "" is the default route for the
  *      application.
  *      @PermitAll - Annotation that indicates that this page is available
- *      to all users * who have been  authenticated to the application 
+ *      to all users * who have been  authenticated to the application
  *      irrespective of Role.
- *      @Menu - This indicates to the Vaadin framework that the view 
+ *      @Menu - This indicates to the Vaadin framework that the view
  *      should be represented in any menu component for the application
- *      and provides the parameters to order, display, and name the 
+ *      and provides the parameters to order, display, and name the
  *      menu item.
- * 
+ *
  * Sample Output: N/A
- * 
+ *
  * Constraints: N/A
- * 
- * Expected Results: 
+ *
+ * Expected Results:
  *      This class will be used as a data display component for the UI.
- * 
+ *
  * Version              Author      Date            Description
  * ***********************************************************************
  *     1                 fjm        20-Oct-2025     Initial Creation
+ *     2                 kpf        27-Oct-2026     Added Email Column
  */
 @Route("")
 @PermitAll
@@ -82,12 +87,12 @@ public class NameView extends VerticalLayout {
      * NameView - A View to represent data retrieved from a database.
      *          Again, because this is a simple view class, all of the work
      *          occurs in the constructor. Helper methods are not required here.
-     * 
+     *
      * @param nameServ The NameServices object that provides access to the data
      *        through Spring Data JPA
      */
     public NameView(NameService nameServ) {
-    
+
         /**
          * Setup our data access service.
          */
@@ -104,6 +109,10 @@ public class NameView extends VerticalLayout {
         grid.addColumn(Name::getMiddle).setHeader("Middle Name");
         grid.addColumn(Name::getLast).setHeader("Last Name");
         grid.addColumn(Name::getSuffix).setHeader("Suffix");
+        grid.addColumn(Name::getEmail).setHeader("Email")
+                .setAutoWidth(true)
+                .setFlexGrow(1)
+                .setResizable(true);
 
         /**
          * This is where we obtain a list of objects from our Serivce object and 
@@ -111,9 +120,9 @@ public class NameView extends VerticalLayout {
          * received from the service, so it may be important to pre-sort the objects
          * within the service or repository calls.
          */
-        List<Name> l = nameService.findAll();    
+        List<Name> l = nameService.findAll();
         grid.setItems(l);
-        
+
         /**
          * This populates the toolabar UI element for this page with a simple label.
          * You could also add other UI components here if you desired to support 
