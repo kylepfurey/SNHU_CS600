@@ -6,6 +6,7 @@ package com.snhu.mscs.cs600.salesguru;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Id;
 
 /**
@@ -37,6 +38,7 @@ import jakarta.persistence.Id;
  * Version              Author      Date            Description
  * ***********************************************************************
  *     1                 fjm        7-Oct-2025     Initial Creation
+ *     2                 kpf       19-Nov-2026     Fixed Generator
  */
 @Entity
 public class Company {
@@ -58,7 +60,8 @@ public class Company {
      *      to obtain the next value.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "company_gen")
+    @SequenceGenerator(name = "company_gen", sequenceName = "company_customer_number_seq", allocationSize = 10)
     private int customer_number;
 
     /**
