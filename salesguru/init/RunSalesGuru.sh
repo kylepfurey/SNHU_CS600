@@ -14,5 +14,7 @@ export SALESGURU_AUTH_DB_PASSWORD=cs600
 export SALESGURU_SEED_USERNAME=cs600
 export SALESGURU_SEED_PASSWORD=cs600
 
+export SALESGURU_PROFILE=dev
+
 cd ..
 mvn clean spring-boot:run

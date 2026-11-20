@@ -4,6 +4,7 @@
 
 package com.snhu.mscs.cs600.salesguru.config;
 import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Profile;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.User;
  * Creates the Initial User
  */
 @Component
+@Profile("dev")
 public class UserBootstrap implements ApplicationRunner {
     /**
      * Fields
