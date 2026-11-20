@@ -123,7 +123,7 @@ public class InvoiceService {
         );
     }
     @Transactional(readOnly = true)
-    public List<Invoice> findInvoicesByCustomerId(Long customerNumber) {
+    public List<Invoice> findInvoicesByCustomerNumber(Long customerNumber) {
         return invoiceRepository.findByCustomerNumber(customerNumber);
     }
     @Transactional(readOnly = true)
