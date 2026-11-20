@@ -2,7 +2,7 @@
 // Login View Frontend
 // by Kyle Furey
 
-package com.snhu.mscs.cs600.salesguru.plus.ui;
+package com.snhu.mscs.cs600.salesguru.ui;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.server.auth.AnonymousAllowed;

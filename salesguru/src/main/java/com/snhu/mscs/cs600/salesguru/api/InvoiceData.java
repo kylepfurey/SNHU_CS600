@@ -1,8 +1,8 @@
 // .java
-// Invoice Data Record
+// Invoice Data Records
 // by Kyle Furey
 
-package com.snhu.mscs.cs600.salesguru.plus;
+package com.snhu.mscs.cs600.salesguru.api;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;

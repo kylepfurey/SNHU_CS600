@@ -2,7 +2,7 @@
 // Spring JPA Item Schema
 // by Kyle Furey
 
-package com.snhu.mscs.cs600.salesguru.plus;
+package com.snhu.mscs.cs600.salesguru.entities;
 import jakarta.persistence.*;
 
 /**
@@ -17,15 +17,12 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "items_gen")
     @SequenceGenerator(name = "items_gen", sequenceName = "items_item_number_seq", allocationSize = 1)
-    @Column(name = "item_number")
+    @Column(name = "item_number", nullable = false)
     Integer itemNumber;
-
     @Column(name = "description", nullable = true, length = 128)
     String description;
-
     @Column(name = "cost", nullable = true)
     Float cost;
-
     @Column(name = "retail", nullable = true)
     Float retail;
 

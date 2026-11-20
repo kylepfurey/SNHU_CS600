@@ -2,8 +2,12 @@
 // Invoice API Service
 // by Kyle Furey
 
-package com.snhu.mscs.cs600.salesguru.plus;
-import com.snhu.mscs.cs600.salesguru.*;
+package com.snhu.mscs.cs600.salesguru.api;
+import com.snhu.mscs.cs600.salesguru.entities.Invoice;
+import com.snhu.mscs.cs600.salesguru.entities.Item;
+import com.snhu.mscs.cs600.salesguru.entities.LineItem;
+import com.snhu.mscs.cs600.salesguru.entities.Representative;
+import com.snhu.mscs.cs600.salesguru.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -75,10 +79,10 @@ public class InvoiceService {
             invoice.addLineItem(lineItem.getLineItemId());
         }
         invoiceRepository.save(invoice);
-        return findInvoice(invoice.getInvoiceNumber());
+        return getInvoice(invoice.getInvoiceNumber());
     }
     @Transactional(readOnly = true)
-    public InvoiceData findInvoice(Integer invoiceNumber) {
+    public InvoiceData getInvoice(Integer invoiceNumber) {
         Invoice invoice = invoiceRepository.findById(invoiceNumber)
                 .orElseThrow(() ->
                         new NoSuchElementException("invoiceNumber not found: " + invoiceNumber)
@@ -123,15 +127,15 @@ public class InvoiceService {
         );
     }
     @Transactional(readOnly = true)
-    public List<Invoice> findInvoicesByCustomerNumber(Long customerNumber) {
+    public List<Invoice> listInvoicesForCompany(Long customerNumber) {
         return invoiceRepository.findByCustomerNumber(customerNumber);
     }
     @Transactional(readOnly = true)
-    public List<Invoice> findInvoicesByRepresentativeId(Long representativeId) {
+    public List<Invoice> listInvoicesForRepresentative(Long representativeId) {
         return invoiceRepository.findByRepresentativeId(representativeId);
     }
     @Transactional(readOnly = true)
-    public List<Invoice> findInvoicesByDateOfSale(LocalDate dateOfSale) {
+    public List<Invoice> listInvoicesForDate(LocalDate dateOfSale) {
         return invoiceRepository.findByDateOfSale(dateOfSale);
     }
 
@@ -163,10 +167,10 @@ public class InvoiceService {
                 .orElseThrow(() ->
                         new NoSuchElementException("representativeId not found: " + representativeId)
                 );
-        if (representative.getCustomer_number() != customerNumber) {
+        if (representative.getCustomerNumber() != customerNumber.intValue()) {
             throw new IllegalArgumentException(
                     "representative.customer_number does not match customerNumber: " +
-                            representative.getCustomer_number() + " != " + customerNumber
+                            representative.getCustomerNumber() + " != " + customerNumber
             );
         }
         for (InvoiceData.Request request : requests) {

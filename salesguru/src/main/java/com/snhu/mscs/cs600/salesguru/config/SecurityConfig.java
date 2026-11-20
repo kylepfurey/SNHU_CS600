@@ -1,9 +1,8 @@
-package com.snhu.mscs.cs600.salesguru.plus;
+// .java
+// Security Configuration
+// by Kyle Furey
 
-/**
- * Imports to allow for the configuration of our Custom Security Adapter with
- * the Spring Security Framework.
- */
+package com.snhu.mscs.cs600.salesguru.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.context.annotation.Import;
@@ -21,52 +20,17 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import com.vaadin.flow.spring.security.VaadinSecurityConfigurer;
-import com.snhu.mscs.cs600.salesguru.plus.ui.LoginView;
+import com.snhu.mscs.cs600.salesguru.ui.LoginView;
 
 /**
- * SecurityConfig -
- *
- * Purpose:
- *      The purpose of this class is to configure the necessary parameters
- *      to enable Spring Security for our Web Application. This will allow
- *      for authentication and authorization of users to control access to
- *      our API.
- *
- * Class Level Annotations:
- *      @Configuration - This tells the Spring Framework that this class
- *      is going to have configuration items that are pulled from other
- *      parts of the Framework.
- *
- *      @EnableWebSecurity - This annotation enables web security features
- *      in Spring Security to allow for the implemenation of authentication
- *      and authorization of users.
- *
- *      @Import - This annotation allows importing a configuration class.
- *      We use VaadinAwareSecurityContextHolderStrategyConfiguration to
- *      allow Vaadin's built-in security in Spring Security.
- *
- * Sample Output: N/A
- *
- * Constraints: N/A
- *
- * Expected Results:
- *      The proper configuration of this class will require anyone
- *      trying to get data from an API endpoint to authenticate. However
- *      it will permit anyone to query the /version endpoint without hinderance.
- *
- * Version              Author      Date            Description
- * ***********************************************************************
- *     1                 fjm        6-Oct-2025     Initial Creation
- *     2                 kpf       19-Nov-2026     Upgraded Security (auth database)
+ * Configures Security
  */
 @Configuration
 @EnableWebSecurity
 @Import(VaadinAwareSecurityContextHolderStrategyConfiguration.class)
 public class SecurityConfig {
-
     /**
-     * passwordEncoder - This is a bean the provides a utility method for
-     * encoding a user submitted password to match for authentication.
+     * Password Encoding
      */
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -74,9 +38,7 @@ public class SecurityConfig {
     }
 
     /**
-     * userDetailsService - This is a bean that creates a single test user and
-     * stores the details in memory to demonstrate the functionality of Spring
-     * Security in our application. This pulls from our authentication database.
+     * User Details
      */
     @Bean
     JdbcUserDetailsManager userDetailsService(
@@ -87,10 +49,7 @@ public class SecurityConfig {
     }
 
     /**
-     * apiFilterChain - Method that configures an API filter chain
-     * to apply the necessary access controls to an HTTP data stream. This
-     * method utilizes a Lambda function to chain multiple filters and
-     * constraints to allow processing more than one item in the chain.
+     * API Filtering
      */
     @Bean
     @Order(1)
@@ -109,8 +68,7 @@ public class SecurityConfig {
     }
 
     /**
-     * vaadinFilterChain - Method that configures a security filter chain
-     * for Vaadin's generated code.
+     * Vaadin Filtering
      */
     @Bean
     @Order(2)

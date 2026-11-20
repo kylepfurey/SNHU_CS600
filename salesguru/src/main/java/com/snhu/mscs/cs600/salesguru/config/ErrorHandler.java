@@ -1,8 +1,8 @@
 // .java
-// Error Handler
+// Exception Handler
 // by Kyle Furey
 
-package com.snhu.mscs.cs600.salesguru.plus;
+package com.snhu.mscs.cs600.salesguru.config;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,14 +13,14 @@ import org.springframework.http.HttpStatus;
 import java.util.NoSuchElementException;
 
 /**
- * Handles Thrown API Errors
+ * Handles Thrown API Exceptions
  */
 @RestControllerAdvice
 public class ErrorHandler {
     /**
      * Logger
      */
-    static final Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
+    final Logger logger = LoggerFactory.getLogger(ErrorHandler.class);
 
     /**
      * IllegalArgumentException

@@ -2,7 +2,8 @@
 // Spring JPA Line Item Repository
 // by Kyle Furey
 
-package com.snhu.mscs.cs600.salesguru.plus;
+package com.snhu.mscs.cs600.salesguru.repository;
+import com.snhu.mscs.cs600.salesguru.entities.LineItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 

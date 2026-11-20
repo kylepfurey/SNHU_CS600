@@ -2,7 +2,7 @@
 // Spring JPA Invoice Schema
 // by Kyle Furey
 
-package com.snhu.mscs.cs600.salesguru.plus;
+package com.snhu.mscs.cs600.salesguru.entities;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -21,18 +21,14 @@ public class Invoice {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "invoice_gen")
     @SequenceGenerator(name = "invoice_gen", sequenceName = "invoice_invoice_number_seq", allocationSize = 5)
-    @Column(name = "invoice_number")
+    @Column(name = "invoice_number", nullable = false)
     Integer invoiceNumber;
-
     @Column(name = "customer_number", nullable = false)
     Long customerNumber;
-
     @Column(name = "representative_id", nullable = false)
     Long representativeId;
-
     @Column(name = "date_of_sale", nullable = false)
     LocalDate dateOfSale;
-
     @JdbcTypeCode(SqlTypes.ARRAY)
     @Column(name = "line_items", nullable = false)
     Integer[] lineItems = new Integer[0];

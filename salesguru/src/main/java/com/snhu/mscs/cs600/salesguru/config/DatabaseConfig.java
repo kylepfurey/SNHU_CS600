@@ -1,8 +1,8 @@
 // .java
-// Database Configurations
+// Database Configuration
 // by Kyle Furey
 
-package com.snhu.mscs.cs600.salesguru.plus;
+package com.snhu.mscs.cs600.salesguru.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
@@ -12,10 +12,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import com.zaxxer.hikari.HikariDataSource;
 
 /**
- * Database Configurations
+ * Configures Database Connections
  */
 @Configuration
-public class DatabaseConfigs {
+public class DatabaseConfig {
     /**
      * Sales Database
      */

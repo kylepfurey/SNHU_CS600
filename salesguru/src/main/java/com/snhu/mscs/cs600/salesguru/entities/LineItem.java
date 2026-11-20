@@ -2,7 +2,7 @@
 // Spring JPA Line Item Schema
 // by Kyle Furey
 
-package com.snhu.mscs.cs600.salesguru.plus;
+package com.snhu.mscs.cs600.salesguru.entities;
 import jakarta.persistence.*;
 
 /**
@@ -17,18 +17,14 @@ public class LineItem {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "line_items_gen")
     @SequenceGenerator(name = "line_items_gen", sequenceName = "line_items_line_item_id_seq", allocationSize = 1)
-    @Column(name = "line_item_id")
+    @Column(name = "line_item_id", nullable = false)
     Integer lineItemId;
-
     @Column(name = "invoice_number", nullable = false)
     Integer invoiceNumber;
-
     @Column(name = "item_number", nullable = true)
     Integer itemNumber;
-
     @Column(name = "qty", nullable = true)
     Integer qty;
-
     @Column(name = "discount", nullable = true)
     Float discount;
 

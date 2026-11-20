@@ -1,8 +1,9 @@
 // .java
-// Invoice REST Controller
+// Invoice API Controller
 // by Kyle Furey
 
-package com.snhu.mscs.cs600.salesguru.plus;
+package com.snhu.mscs.cs600.salesguru.api;
+import com.snhu.mscs.cs600.salesguru.entities.Invoice;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -17,7 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @RequestMapping("/api/v1")
 public class InvoiceController {
     /**
-     * Invoice Request Record
+     * Records
      */
     public record Request(
             Long customerNumber,
@@ -56,32 +57,32 @@ public class InvoiceController {
                 .body(invoiceData);
     }
     @GetMapping("/invoices/{invoiceNumber}")
-    public InvoiceData findInvoice(
+    public InvoiceData getInvoice(
             @PathVariable
             Integer invoiceNumber
     ) {
-        return invoiceService.findInvoice(invoiceNumber);
+        return invoiceService.getInvoice(invoiceNumber);
     }
-    @GetMapping("/invoices/forCustomer/{customerNumber}")
-    public List<Invoice> findByCustomerNumber(
+    @GetMapping("/invoices/forCompany/{customerNumber}")
+    public List<Invoice> listInvoicesForCompany(
             @PathVariable
             Long customerNumber
     ) {
-        return invoiceService.findInvoicesByCustomerNumber(customerNumber);
+        return invoiceService.listInvoicesForCompany(customerNumber);
     }
-    @GetMapping("/invoices/forRepresentative/{representativeId}")
-    public List<Invoice> findByRepresentativeId(
+    @GetMapping("/invoices/forRep/{representativeId}")
+    public List<Invoice> listInvoicesForRepresentative(
             @PathVariable
             Long representativeId
     ) {
-        return invoiceService.findInvoicesByRepresentativeId(representativeId);
+        return invoiceService.listInvoicesForRepresentative(representativeId);
     }
     @GetMapping("/invoices/forDate/{dateOfSale}")
-    public List<Invoice> findByDateOfSale(
+    public List<Invoice> listInvoicesForDate(
             @PathVariable
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
             LocalDate dateOfSale
     ) {
-        return invoiceService.findInvoicesByDateOfSale(dateOfSale);
+        return invoiceService.listInvoicesForDate(dateOfSale);
     }
 }

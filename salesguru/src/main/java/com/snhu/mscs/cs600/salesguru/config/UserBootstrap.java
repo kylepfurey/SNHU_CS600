@@ -2,7 +2,7 @@
 // Initial User Creator
 // by Kyle Furey
 
-package com.snhu.mscs.cs600.salesguru.plus;
+package com.snhu.mscs.cs600.salesguru.config;
 import org.springframework.stereotype.Component;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
@@ -12,7 +12,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.security.core.userdetails.User;
 
 /**
- * Creates Initial User
+ * Creates the Initial User
  */
 @Component
 public class UserBootstrap implements ApplicationRunner {
