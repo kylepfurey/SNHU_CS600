@@ -4,7 +4,6 @@
 
 package com.snhu.mscs.cs600.salesguru.api;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import com.snhu.mscs.cs600.salesguru.entities.Company;
 import com.snhu.mscs.cs600.salesguru.entities.Representative;
@@ -18,7 +17,6 @@ public class SalesGuruController {
     /**
      * Services
      */
-    @Autowired
     final SalesGuruService salesGuruService;
 
     /**
