@@ -600,3 +600,8 @@ GRANT ALL ON TABLE public.representative TO cs600;
 -- PostgreSQL database dump complete
 --
 
+INSERT INTO public.items (description, cost, retail) VALUES
+  ('Hologram Business Cards (250)', 85.00, 199.99),
+  ('Custom Planner', 12.50, 34.95),
+  ('Executive Pen', 18.00, 59.00),
+  ('Eco Fleece Jacket', 22.00, 79.50);

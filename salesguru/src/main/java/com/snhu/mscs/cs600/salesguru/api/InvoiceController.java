@@ -42,6 +42,10 @@ public class InvoiceController {
     /**
      * API
      */
+    @GetMapping("/invoices")
+    public List<Invoice> listInvoices() {
+        return invoiceService.listInvoices();
+    }
     @PostMapping("/invoices")
     public ResponseEntity<InvoiceData> createInvoice(
             @RequestBody

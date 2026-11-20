@@ -16,6 +16,7 @@ import java.util.NoSuchElementException;
 import java.util.ArrayList;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Objects;
 
 /**
  * API Service for Invoices
@@ -80,6 +81,10 @@ public class InvoiceService {
         }
         invoiceRepository.save(invoice);
         return getInvoice(invoice.getInvoiceNumber());
+    }
+    @Transactional(readOnly = true)
+    public List<Invoice> listInvoices() {
+        return invoiceRepository.findAll();
     }
     @Transactional(readOnly = true)
     public InvoiceData getInvoice(Integer invoiceNumber) {
@@ -167,9 +172,9 @@ public class InvoiceService {
                 .orElseThrow(() ->
                         new NoSuchElementException("representativeId not found: " + representativeId)
                 );
-        if (representative.getCustomerNumber() != customerNumber.intValue()) {
+        if (!Objects.equals(representative.getCustomerNumber(), customerNumber.intValue())) {
             throw new IllegalArgumentException(
-                    "representative.customer_number does not match customerNumber: " +
+                    "representative.customerNumber does not match customerNumber: " +
                             representative.getCustomerNumber() + " != " + customerNumber
             );
         }

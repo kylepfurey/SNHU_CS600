@@ -1,7 +1,3 @@
--- .sql
--- SalesGuruPlus DataSource Generator
--- by Kyle Furey
-
 CREATE DATABASE salesguru_auth OWNER postgres;
 \c salesguru_auth
 
