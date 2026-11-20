@@ -38,7 +38,7 @@ import jakarta.persistence.Id;
  * Version              Author      Date            Description
  * ***********************************************************************
  *     1                 fjm        7-Oct-2025     Initial Creation
- *     2                 kpf       19-Nov-2026     Fixed Generator
+ *     2                 kpf       20-Nov-2026     Fixed Generator
  */
 @Entity
 public class Company {
@@ -60,8 +60,8 @@ public class Company {
      *      to obtain the next value.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "company_gen")
-    @SequenceGenerator(name = "company_gen", sequenceName = "company_customer_number_seq", allocationSize = 10)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "company_customer_number_generator")
+    @SequenceGenerator(name = "company_customer_number_generator", sequenceName = "company_customer_number_seq", allocationSize = 10)
     private int customer_number;
 
     /**
