@@ -47,13 +47,13 @@ class InvoiceControllerTests {
                 .build();
     }
     @Test
-    void createReturns201WithLocation() throws Exception {
+    void createInvoiceIs201() throws Exception {
         when(invoiceService.createInvoice(any(), any(), any(), any()))
                 .thenReturn(
                         new InvoiceData(
                                 10000,
-                                1000L,
-                                1660L,
+                                1000,
+                                1660,
                                 LocalDate.of(2026, 11, 20),
                                 List.of(),
                                 BigDecimal.ZERO
@@ -70,7 +70,7 @@ class InvoiceControllerTests {
                         .value(10000));
     }
     @Test
-    void validationErrorIs400() throws Exception {
+    void badInvoiceIs400() throws Exception {
         when(invoiceService.createInvoice(any(), any(), any(), any()))
                 .thenThrow(new IllegalArgumentException("bad"));
         mockMvc.perform(post("/api/v1/invoices")
@@ -90,10 +90,44 @@ class InvoiceControllerTests {
                         .isNotFound());
     }
     @Test
-    void malformedJsonIs400() throws Exception {
+    void badJsonIs400() throws Exception {
         mockMvc.perform(post("/api/v1/invoices")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{nope"))
+                .andExpect(status()
+                        .isBadRequest());
+    }
+    @Test
+    void invoiceListIsPaginated() throws Exception {
+        when(invoiceService.listInvoices(0, 100))
+                .thenReturn(List.of());
+        mockMvc.perform(get("/api/v1/invoices"))
+                .andExpect(status()
+                        .isOk())
+                .andExpect(jsonPath("$.length()")
+                        .value(0));
+        verify(invoiceService)
+                .listInvoices(0, 100);
+    }
+    @Test
+    void badPagingIs400() throws Exception {
+        when(invoiceService.listInvoices(0, 9999))
+                .thenThrow(new IllegalArgumentException("size"));
+        mockMvc.perform(get("/api/v1/invoices?page=0&size=9999"))
+                .andExpect(status()
+                        .isBadRequest());
+    }
+    @Test
+    void forCompanyReturns200() throws Exception {
+        when(invoiceService.listInvoicesForCompany(1000))
+                .thenReturn(List.of());
+        mockMvc.perform(get("/api/v1/invoices/forCompany/1000"))
+                .andExpect(status()
+                        .isOk());
+    }
+    @Test
+    void rejectBadDate() throws Exception {
+        mockMvc.perform(get("/api/v1/invoices/forDate/not-a-date"))
                 .andExpect(status()
                         .isBadRequest());
     }

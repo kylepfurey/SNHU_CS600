@@ -12,8 +12,8 @@ import java.util.List;
  */
 public record InvoiceData(
         Integer invoiceNumber,
-        Long customerNumber,
-        Long representativeId,
+        Integer customerNumber,
+        Integer representativeId,
         LocalDate dateOfSale,
         List<Line> lines,
         BigDecimal total
@@ -36,6 +36,6 @@ public record InvoiceData(
     public record Request(
             Integer itemNumber,
             Integer qty,
-            Float discount
+            BigDecimal discount
     ) { }
 }

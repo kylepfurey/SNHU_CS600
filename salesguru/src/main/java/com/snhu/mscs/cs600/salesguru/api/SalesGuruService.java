@@ -4,9 +4,9 @@
 
 package com.snhu.mscs.cs600.salesguru.api;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.snhu.mscs.cs600.salesguru.repository.CompanyRepository;
-import com.snhu.mscs.cs600.salesguru.repository.RepresentativeRepository;
+import com.snhu.mscs.cs600.salesguru.repositories.CompanyRepository;
+import com.snhu.mscs.cs600.salesguru.repositories.RepresentativeRepository;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import com.snhu.mscs.cs600.salesguru.entities.Company;
 import com.snhu.mscs.cs600.salesguru.entities.Representative;
@@ -19,10 +19,8 @@ public class SalesGuruService {
     /**
      * Repositories
      */
-    @Autowired
-    CompanyRepository companyRepository;
-    @Autowired
-    RepresentativeRepository representativeRepository;
+    final CompanyRepository companyRepository;
+    final RepresentativeRepository representativeRepository;
 
     /**
      * Constructor
@@ -38,12 +36,15 @@ public class SalesGuruService {
     /**
      * API
      */
+    @Transactional(readOnly = true)
     public List<Company> listCompanies() {
         return companyRepository.listCompanies();
     }
+    @Transactional(readOnly = true)
     public List<Representative> listRepresentatives() {
         return representativeRepository.listRepresentatives();
     }
+    @Transactional(readOnly = true)
     public List<Representative> listRepresentativesForCompany(Integer customerNumber) {
         return representativeRepository.listRepresentativesForCompany(customerNumber);
     }

@@ -11,7 +11,7 @@ import com.snhu.mscs.cs600.salesguru.api.ItemService;
 import com.vaadin.flow.component.grid.Grid;
 import com.snhu.mscs.cs600.salesguru.entities.Item;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
@@ -35,8 +35,8 @@ public class ItemsView extends VerticalLayout {
      */
     final Grid<Item> itemsGrid = new Grid<>();
     final TextField descriptionTextField = new TextField("Description");
-    final NumberField costNumberField = new NumberField("Cost");
-    final NumberField retailNumberField = new NumberField("Retail");
+    final BigDecimalField costField = new BigDecimalField("Cost");
+    final BigDecimalField retailField = new BigDecimalField("Retail");
 
     /**
      * Constructor
@@ -68,8 +68,8 @@ public class ItemsView extends VerticalLayout {
         // Horizontal layout
         HorizontalLayout horizontalLayout = new HorizontalLayout(
                 descriptionTextField,
-                costNumberField,
-                retailNumberField,
+                costField,
+                retailField,
                 addButton
         );
         horizontalLayout.setDefaultVerticalComponentAlignment(FlexComponent.Alignment.BASELINE);
@@ -86,12 +86,12 @@ public class ItemsView extends VerticalLayout {
         try {
             itemService.createItem(
                     descriptionTextField.getValue(),
-                    costNumberField.getValue() == null ? null : costNumberField.getValue().floatValue(),
-                    retailNumberField.getValue() == null ? null : retailNumberField.getValue().floatValue()
+                    costField.getValue(),
+                    retailField.getValue()
             );
             descriptionTextField.clear();
-            costNumberField.clear();
-            retailNumberField.clear();
+            costField.clear();
+            retailField.clear();
             refresh();
         } catch (IllegalArgumentException error) {
             Notification.show(error.getMessage());

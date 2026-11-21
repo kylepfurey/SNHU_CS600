@@ -31,7 +31,7 @@ public class SalesGuruController {
      */
     @GetMapping("/version")
     public String getVersion() {
-        return "Version-1.0";
+        return "Version-2.0";
     }
     @GetMapping("/companies")
     public List<Company> listCompanies() {

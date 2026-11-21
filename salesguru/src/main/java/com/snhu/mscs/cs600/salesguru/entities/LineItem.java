@@ -4,6 +4,7 @@
 
 package com.snhu.mscs.cs600.salesguru.entities;
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 
 /**
  * Line Item Schema
@@ -26,14 +27,14 @@ public class LineItem {
     @Column(name = "qty", nullable = true)
     Integer qty;
     @Column(name = "discount", nullable = true)
-    Float discount;
+    BigDecimal discount;
 
     /**
      * Constructors
      */
     public LineItem() {
     }
-    public LineItem(Integer invoiceNumber, Integer itemNumber, Integer qty, Float discount) {
+    public LineItem(Integer invoiceNumber, Integer itemNumber, Integer qty, BigDecimal discount) {
         this.invoiceNumber = invoiceNumber;
         this.itemNumber = itemNumber;
         this.qty = qty;
@@ -55,7 +56,7 @@ public class LineItem {
     public Integer getQty() {
         return qty;
     }
-    public Float getDiscount() {
+    public BigDecimal getDiscount() {
         return discount;
     }
 }

@@ -24,9 +24,9 @@ public class Invoice {
     @Column(name = "invoice_number", nullable = false)
     Integer invoiceNumber;
     @Column(name = "customer_number", nullable = false)
-    Long customerNumber;
+    Integer customerNumber;
     @Column(name = "representative_id", nullable = false)
-    Long representativeId;
+    Integer representativeId;
     @Column(name = "date_of_sale", nullable = false)
     LocalDate dateOfSale;
     @JdbcTypeCode(SqlTypes.ARRAY)
@@ -38,7 +38,12 @@ public class Invoice {
      */
     public Invoice() {
     }
-    public Invoice(Long customerNumber, Long representativeId, LocalDate dateOfSale, Integer[] lineItems) {
+    public Invoice(
+            Integer customerNumber,
+            Integer representativeId,
+            LocalDate dateOfSale,
+            Integer[] lineItems
+    ) {
         this.customerNumber = customerNumber;
         this.representativeId = representativeId;
         this.dateOfSale = dateOfSale;
@@ -51,10 +56,10 @@ public class Invoice {
     public Integer getInvoiceNumber() {
         return invoiceNumber;
     }
-    public Long getCustomerNumber() {
+    public Integer getCustomerNumber() {
         return customerNumber;
     }
-    public Long getRepresentativeId() {
+    public Integer getRepresentativeId() {
         return representativeId;
     }
     public LocalDate getDateOfSale() {

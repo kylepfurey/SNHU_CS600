@@ -3,26 +3,38 @@
 // by Kyle Furey
 
 package com.snhu.mscs.cs600.salesguru.api;
-import com.snhu.mscs.cs600.salesguru.entities.Invoice;
-import com.snhu.mscs.cs600.salesguru.entities.Item;
-import com.snhu.mscs.cs600.salesguru.entities.LineItem;
-import com.snhu.mscs.cs600.salesguru.entities.Representative;
-import com.snhu.mscs.cs600.salesguru.repository.*;
 import org.springframework.stereotype.Service;
+import com.snhu.mscs.cs600.salesguru.repositories.*;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
+import com.snhu.mscs.cs600.salesguru.entities.Invoice;
+import com.snhu.mscs.cs600.salesguru.entities.LineItem;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import com.snhu.mscs.cs600.salesguru.entities.Item;
 import java.util.ArrayList;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import com.snhu.mscs.cs600.salesguru.entities.Representative;
 import java.util.Objects;
+import java.util.HashMap;
 
 /**
  * API Service for Invoices
  */
 @Service
 public class InvoiceService {
+    /**
+     * Constants
+     */
+    static final Integer MAX_LINES = 500;
+    static final Integer MAX_PAGE_SIZE = 200;
+
     /**
      * Repositories
      */
@@ -54,8 +66,8 @@ public class InvoiceService {
      */
     @Transactional
     public InvoiceData createInvoice(
-            Long customerNumber,
-            Long representativeId,
+            Integer customerNumber,
+            Integer representativeId,
             LocalDate dateOfSale,
             List<InvoiceData.Request> requests
     ) {
@@ -87,39 +99,50 @@ public class InvoiceService {
         return invoiceRepository.findAll();
     }
     @Transactional(readOnly = true)
+    public List<Invoice> listInvoices(Integer page, Integer size) {
+        if (page < 0) {
+            throw new IllegalArgumentException("page must be >= 0: " + page);
+        }
+        if (size < 1 || size > MAX_PAGE_SIZE) {
+            throw new IllegalArgumentException("size must be between 1 and " + MAX_PAGE_SIZE + ": " + size);
+        }
+        return invoiceRepository.findAll(PageRequest.of(page, size, Sort.by("invoiceNumber"))).getContent();
+    }
+    @Transactional(readOnly = true)
     public InvoiceData getInvoice(Integer invoiceNumber) {
-        Invoice invoice = invoiceRepository.findById(invoiceNumber)
-                .orElseThrow(() ->
-                        new NoSuchElementException("invoiceNumber not found: " + invoiceNumber)
-                );
-        List<InvoiceData.Line> lines = new ArrayList<>();
-        BigDecimal total = BigDecimal.ZERO;
-        for (LineItem lineItem : lineItemRepository.findByInvoiceNumber(invoiceNumber)) {
+        Invoice invoice = invoiceRepository.findById(invoiceNumber).orElseThrow(() ->
+                new NoSuchElementException("invoiceNumber not found: " + invoiceNumber));
+        List<LineItem> lineItems = lineItemRepository.findByInvoiceNumber(invoiceNumber);
+        Set<Integer> itemNumbers = new LinkedHashSet<>();
+        for (LineItem lineItem : lineItems) {
             if (lineItem.getQty() == null || lineItem.getItemNumber() == null) {
                 throw new IllegalStateException("Null LineItem field: " + invoiceNumber);
             }
-            Item item = itemRepository.findById(lineItem.getItemNumber())
-                    .orElseThrow(() ->
-                            new NoSuchElementException("itemNumber not found: " + lineItem.getItemNumber())
-                    );
+            itemNumbers.add(lineItem.getItemNumber());
+        }
+        Map<Integer, Item> items = loadItems(itemNumbers);
+        List<InvoiceData.Line> lines = new ArrayList<>();
+        BigDecimal total = BigDecimal.ZERO;
+        for (LineItem lineItem : lineItems) {
+            Item item = items.get(lineItem.getItemNumber());
             if (item.getRetail() == null) {
                 throw new IllegalStateException("Null retail");
             }
-            BigDecimal price = floatToMoney(item.getRetail());
-            BigDecimal discount = lineItem.getDiscount() == null ?
-                    BigDecimal.ZERO :
-                    new BigDecimal(Float.toString(lineItem.getDiscount()));
+            BigDecimal price = item.getRetail().setScale(2, RoundingMode.HALF_UP);
+            BigDecimal discount = lineItem.getDiscount() == null ? BigDecimal.ZERO : lineItem.getDiscount();
             BigDecimal lineTotal = price.multiply(BigDecimal.valueOf(lineItem.getQty()))
                     .multiply(BigDecimal.ONE.subtract(discount))
                     .setScale(2, RoundingMode.HALF_UP);
-            lines.add(new InvoiceData.Line(
-                    item.getItemNumber(),
-                    item.getDescription(),
-                    lineItem.getQty(),
-                    price,
-                    discount,
-                    lineTotal
-            ));
+            lines.add(
+                    new InvoiceData.Line(
+                            item.getItemNumber(),
+                            item.getDescription(),
+                            lineItem.getQty(),
+                            price,
+                            discount,
+                            lineTotal
+                    )
+            );
             total = total.add(lineTotal);
         }
         return new InvoiceData(
@@ -132,11 +155,11 @@ public class InvoiceService {
         );
     }
     @Transactional(readOnly = true)
-    public List<Invoice> listInvoicesForCompany(Long customerNumber) {
+    public List<Invoice> listInvoicesForCompany(Integer customerNumber) {
         return invoiceRepository.findByCustomerNumber(customerNumber);
     }
     @Transactional(readOnly = true)
-    public List<Invoice> listInvoicesForRepresentative(Long representativeId) {
+    public List<Invoice> listInvoicesForRepresentative(Integer representativeId) {
         return invoiceRepository.findByRepresentativeId(representativeId);
     }
     @Transactional(readOnly = true)
@@ -148,8 +171,8 @@ public class InvoiceService {
      * Helpers
      */
     void validate(
-            Long customerNumber,
-            Long representativeId,
+            Integer customerNumber,
+            Integer representativeId,
             LocalDate dateOfSale,
             List<InvoiceData.Request> requests
     ) {
@@ -165,39 +188,48 @@ public class InvoiceService {
         if (requests == null || requests.isEmpty()) {
             throw new IllegalArgumentException("Null requests array");
         }
-        if (!companyRepository.existsById(customerNumber.intValue())) {
+        if (requests.size() > MAX_LINES) {
+            throw new IllegalArgumentException("Too many lines (max " + MAX_LINES + "): " + requests.size());
+        }
+        if (!companyRepository.existsById(customerNumber)) {
             throw new NoSuchElementException("customerNumber not found: " + customerNumber);
         }
-        Representative representative = representativeRepository.findById(representativeId.intValue())
+        Representative representative = representativeRepository.findById(representativeId)
                 .orElseThrow(() ->
-                        new NoSuchElementException("representativeId not found: " + representativeId)
-                );
-        if (!Objects.equals(representative.getCustomerNumber(), customerNumber.intValue())) {
-            throw new IllegalArgumentException(
-                    "representative.customerNumber does not match customerNumber: " +
-                            representative.getCustomerNumber() + " != " + customerNumber
-            );
+                        new NoSuchElementException("representativeId not found: " + representativeId));
+        if (!Objects.equals(representative.getCustomerNumber(), customerNumber)) {
+            throw new IllegalArgumentException("representative.customerNumber does not match customerNumber: " +
+                    representative.getCustomerNumber() + " != " + customerNumber);
         }
+        Set<Integer> itemNumbers = new LinkedHashSet<>();
         for (InvoiceData.Request request : requests) {
-            if (request == null ||
-                    request.itemNumber() == null ||
-                    request.qty() == null ||
-                    request.discount() == null) {
+            if (request == null || request.itemNumber() == null || request.qty() == null || request.discount() == null) {
                 throw new IllegalArgumentException("Null InvoiceData.Line or field");
             }
             if (request.qty() <= 0) {
-                throw new IllegalArgumentException("Negative InvoiceData.Line qty: " + request.qty());
+                throw new IllegalArgumentException("Non-positive InvoiceData.Line qty: " + request.qty());
             }
-            float discount = request.discount();
-            if (!(discount >= 0.0f && discount <= 1.0f)) {
+            BigDecimal discount = request.discount();
+            if (discount.signum() < 0 || discount.compareTo(BigDecimal.ONE) > 0) {
                 throw new IllegalArgumentException("discount out of range: " + discount);
             }
-            if (!itemRepository.existsById(request.itemNumber())) {
-                throw new NoSuchElementException("InvoiceData.Line.itemNumber not found: " + request.itemNumber());
+            if (discount.stripTrailingZeros().scale() > 4) {
+                throw new IllegalArgumentException("discount allows at most 4 decimal places: " + discount);
+            }
+            itemNumbers.add(request.itemNumber());
+        }
+        loadItems(itemNumbers);
+    }
+    Map<Integer, Item> loadItems(Set<Integer> itemNumbers) {
+        Map<Integer, Item> found = new HashMap<>();
+        for (Item item : itemRepository.findAllById(itemNumbers)) {
+            found.put(item.getItemNumber(), item);
+        }
+        for (Integer itemNumber : itemNumbers) {
+            if (!found.containsKey(itemNumber)) {
+                throw new NoSuchElementException("itemNumber not found: " + itemNumber);
             }
         }
-    }
-    BigDecimal floatToMoney(Float value) {
-        return new BigDecimal(Float.toString(value)).setScale(2, RoundingMode.HALF_UP);
+        return found;
     }
 }

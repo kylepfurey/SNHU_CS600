@@ -3,6 +3,7 @@
 // by Kyle Furey
 package com.snhu.mscs.cs600.salesguru.api;
 import org.springframework.web.bind.annotation.*;
+import java.math.BigDecimal;
 import org.springframework.http.ResponseEntity;
 import com.snhu.mscs.cs600.salesguru.entities.Item;
 import java.net.URI;
@@ -17,7 +18,7 @@ public class ItemController {
     /**
      * Records
      */
-    public record Request(String description, Float cost, Float retail) { }
+    public record Request(String description, BigDecimal cost, BigDecimal retail) { }
 
     /**
      * Services

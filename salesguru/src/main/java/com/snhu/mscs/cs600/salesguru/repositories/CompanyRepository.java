@@ -2,7 +2,7 @@
 // Spring JPA Company Repository
 // by Kyle Furey
 
-package com.snhu.mscs.cs600.salesguru.repository;
+package com.snhu.mscs.cs600.salesguru.repositories;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.snhu.mscs.cs600.salesguru.entities.Company;

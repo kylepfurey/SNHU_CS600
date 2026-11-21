@@ -7,10 +7,13 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
 import jakarta.annotation.security.PermitAll;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.snhu.mscs.cs600.salesguru.api.SalesGuruService;
 import com.snhu.mscs.cs600.salesguru.api.InvoiceService;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.combobox.ComboBox;
+import com.snhu.mscs.cs600.salesguru.entities.Company;
 import com.vaadin.flow.component.html.H2;
 import com.snhu.mscs.cs600.salesguru.entities.Invoice;
 import java.util.List;
@@ -28,6 +31,7 @@ public class InvoicesView extends VerticalLayout {
     /**
      * Service
      */
+    final SalesGuruService salesGuruService;
     final InvoiceService invoiceService;
 
     /**
@@ -41,8 +45,20 @@ public class InvoicesView extends VerticalLayout {
     /**
      * Constructor
      */
-    public InvoicesView(InvoiceService invoiceService) {
+    public InvoicesView(
+            SalesGuruService salesGuruService,
+            InvoiceService invoiceService
+    ) {
+        this.salesGuruService = salesGuruService;
         this.invoiceService = invoiceService;
+
+        // Filter
+        ComboBox<Company> filterComboBox = new ComboBox<>("Company");
+        filterComboBox.setItems(salesGuruService.listCompanies());
+        filterComboBox.setItemLabelGenerator(c -> c.getCustomerNumber() + " - " + c.getName());
+        filterComboBox.setClearButtonVisible(true);
+        filterComboBox.setWidth("24em");
+        filterComboBox.addValueChangeListener(event -> refresh(event.getValue()));
 
         // Invoice table
         invoiceGrid.addColumn(Invoice::getInvoiceNumber)
@@ -76,7 +92,8 @@ public class InvoicesView extends VerticalLayout {
                 .setHeader("Line total");
 
         setSizeFull();
-        add(new H2("Invoices"), invoiceGrid, defaultHeader, lineGrid, totalText);
+        add(new H2("Invoices"), filterComboBox, invoiceGrid, defaultHeader, lineGrid, totalText);
+        refresh(null);
     }
 
     /**
@@ -97,5 +114,11 @@ public class InvoicesView extends VerticalLayout {
         } catch (NoSuchElementException | IllegalStateException error) {
             Notification.show("Could not load invoice " + invoice.getInvoiceNumber());
         }
+    }
+    void refresh(Company company) {
+        invoiceGrid.setItems(company == null ?
+                invoiceService.listInvoices() :
+                invoiceService.listInvoicesForCompany(company.getCustomerNumber()));
+        showDetail(null);
     }
 }

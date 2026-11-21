@@ -21,8 +21,8 @@ public class InvoiceController {
      * Records
      */
     public record Request(
-            Long customerNumber,
-            Long representativeId,
+            Integer customerNumber,
+            Integer representativeId,
             LocalDate dateOfSale,
             List<InvoiceData.Request> lines
     ) { }
@@ -43,8 +43,13 @@ public class InvoiceController {
      * API
      */
     @GetMapping("/invoices")
-    public List<Invoice> listInvoices() {
-        return invoiceService.listInvoices();
+    public List<Invoice> listInvoices(
+            @RequestParam(defaultValue = "0")
+            Integer page,
+            @RequestParam(defaultValue = "100")
+            Integer size
+    ) {
+        return invoiceService.listInvoices(page, size);
     }
     @PostMapping("/invoices")
     public ResponseEntity<InvoiceData> createInvoice(
@@ -70,14 +75,14 @@ public class InvoiceController {
     @GetMapping("/invoices/forCompany/{customerNumber}")
     public List<Invoice> listInvoicesForCompany(
             @PathVariable
-            Long customerNumber
+            Integer customerNumber
     ) {
         return invoiceService.listInvoicesForCompany(customerNumber);
     }
     @GetMapping("/invoices/forRep/{representativeId}")
     public List<Invoice> listInvoicesForRepresentative(
             @PathVariable
-            Long representativeId
+            Integer representativeId
     ) {
         return invoiceService.listInvoicesForRepresentative(representativeId);
     }

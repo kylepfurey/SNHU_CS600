@@ -1,5 +1,6 @@
 // .java
 // Spring JPA Representative Schema
+// by Kyle Furey
 
 package com.snhu.mscs.cs600.salesguru.entities;
 import jakarta.persistence.*;

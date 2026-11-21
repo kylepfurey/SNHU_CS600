@@ -11,6 +11,10 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 import java.util.NoSuchElementException;
+import org.springframework.dao.QueryTimeoutException;
+import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.transaction.CannotCreateTransactionException;
+import org.springframework.dao.DataAccessException;
 
 /**
  * Handles Thrown API Exceptions
@@ -54,6 +58,30 @@ public class ErrorHandler {
                 .body(
                         Map.of("error", "Server error") // Exception is private
                 );
+    }
+
+    /**
+     * QueryTimeoutException, DataAccessResourceFailureException, CannotCreateTransactionException
+     */
+    @ExceptionHandler({
+            QueryTimeoutException.class,
+            DataAccessResourceFailureException.class,
+            CannotCreateTransactionException.class
+    })
+    public ResponseEntity<Map<String, String>> databaseUnavailable(Exception error) {
+        logger.error("Database unavailable: ", error);
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(Map.of("error", "Service unavailable")); // Exception is private
+    }
+
+    /**
+     * DataAccessException
+     */
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<Map<String, String>> databaseError(DataAccessException error) {
+        logger.error("Database error: ", error);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("error", "Server error")); // Exception is private
     }
 
     /**
