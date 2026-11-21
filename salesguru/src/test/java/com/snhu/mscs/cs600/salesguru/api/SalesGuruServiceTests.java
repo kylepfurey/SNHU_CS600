@@ -1,5 +1,5 @@
 // .java
-// Sales Guru Testing Suite
+// Sales Guru Service Testing Suite
 // by Kyle Furey
 
 package com.snhu.mscs.cs600.salesguru.api;

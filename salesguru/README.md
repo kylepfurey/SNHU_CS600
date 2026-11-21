@@ -25,4 +25,4 @@ cd init
 ./RunSalesGuru.sh
 ```
 
-https://127.0.0.1:8443 (login with cs600:cs600)
+https://localhost:8443/ (login with cs600:cs600)
