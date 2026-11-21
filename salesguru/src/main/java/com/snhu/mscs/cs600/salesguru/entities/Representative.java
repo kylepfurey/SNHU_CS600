@@ -2,13 +2,13 @@
 // Spring JPA Representative Schema
 
 package com.snhu.mscs.cs600.salesguru.entities;
-
 import jakarta.persistence.*;
 
 /**
  * Representative Schema
  */
 @Entity
+@Table(name = "representative")
 public class Representative {
     /**
      * Columns
