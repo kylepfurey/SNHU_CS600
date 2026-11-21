@@ -13,7 +13,7 @@ import com.vaadin.flow.component.html.Paragraph;
 /**
  * Frontend: Home Page
  */
-@Route("")
+@Route(value = "", layout = MainLayout.class)
 @PageTitle("Sales Guru+")
 @PermitAll
 public class HomeView extends VerticalLayout {

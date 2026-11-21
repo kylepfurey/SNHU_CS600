@@ -28,6 +28,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
      * Constructor
      */
     public LoginView() {
+        // Login
         setSizeFull();
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
@@ -42,6 +43,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
      */
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
+        // Login error
         loginForm.setError(
                 event.getLocation()
                         .getQueryParameters()

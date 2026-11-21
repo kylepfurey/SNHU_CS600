@@ -18,7 +18,7 @@ public class ItemService {
     /**
      * Constants
      */
-    final int DESCRIPTION_LENGTH = 128;
+    public static final int DESCRIPTION_LENGTH = 128;
 
     /**
      * Repositories
