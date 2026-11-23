@@ -9,7 +9,7 @@ psql -U postgres -f SalesGuru-Init-Auth-Database.sql
 psql -U postgres -f SalesGuru-Migrate-Database.sql
 ```
 
-Migration is required. The original database creates `invoice.customer_number` as `bigint`, and `cost`, `retail` and `discount` as `real`. The entities now use `integer` and `numeric`, and `ddl-auto=validate` fails otherwise.
+Migration is required. The original database creates `invoice.customer_number` as `bigint`, and `cost`, `retail`, and `discount` as `real`. The entities now use `integer` and `numeric`, and `ddl-auto=validate` fails otherwise.
 
 These changes were explicitly added. Relational keys should have matching types, and currency shouldn't be stored as a `float`. More on this in the paper.
 
